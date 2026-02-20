@@ -1,0 +1,118 @@
+index.html
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { motion } from "framer-motion";
+
+export default function SistemaRefeicoes() {
+  const unidades = ["Y01", "Y02", "Y03", "Y04", "Y08", "Y12", "N01", "N04", "N06", "P02", "YP1", "CM1"];
+  const competencias = ["Civil", "Elétrica", "Mecânica", "Automações"];
+
+  const [unidade, setUnidade] = useState("");
+  const [quantidade, setQuantidade] = useState("");
+  const [nomes, setNomes] = useState("");
+  const [datas, setDatas] = useState("");
+  const [periodo, setPeriodo] = useState("");
+  const [competencia, setCompetencia] = useState("");
+  const [empresaTerceirizada, setEmpresaTerceirizada] = useState("");
+  const [empresaRefeicao, setEmpresaRefeicao] = useState("");
+  const [textoFinal, setTextoFinal] = useState("");
+
+  const gerarTexto = () => {
+    const texto = `Prezados(as),\n\nSegue lista de refeições.\nEmpresa: ${empresaRefeicao}\n\n${competencia}:\n${datas} - ${quantidade} ${periodo}(s) (${empresaTerceirizada}).\n\nUnidade: ${unidade}\n\nTerceirizados:\n${nomes}`;
+    setTextoFinal(texto);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <Card className="max-w-4xl mx-auto rounded-2xl shadow-lg">
+          <CardContent className="p-6 space-y-6">
+            <h1 className="text-2xl font-bold">Sistema de Solicitação de Refeições</h1>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Unidade</label>
+                <Select onValueChange={setUnidade}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a unidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {unidades.map((u) => (
+                      <SelectItem key={u} value={u}>{u}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Competência</label>
+                <Select onValueChange={setCompetencia}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a competência" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {competencias.map((c) => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Quantidade de Terceirizados</label>
+                <Input type="number" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Período</label>
+                <Select onValueChange={setPeriodo}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Almoço, Janta ou Ambos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Almoço">Almoço</SelectItem>
+                    <SelectItem value="Janta">Janta</SelectItem>
+                    <SelectItem value="Almoço e Janta">Almoço e Janta</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Datas (Período)</label>
+                <Input type="text" placeholder="Ex: 01/03 a 05/03" value={datas} onChange={(e) => setDatas(e.target.value)} />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Empresa Terceirizada</label>
+                <Input value={empresaTerceirizada} onChange={(e) => setEmpresaTerceirizada(e.target.value)} />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="text-sm font-medium">Empresa fornecedora das refeições</label>
+                <Input value={empresaRefeicao} onChange={(e) => setEmpresaRefeicao(e.target.value)} />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="text-sm font-medium">Nome dos Terceirizados</label>
+                <Textarea rows={4} placeholder="Digite um nome por linha" value={nomes} onChange={(e) => setNomes(e.target.value)} />
+              </div>
+            </div>
+
+            <Button onClick={gerarTexto} className="w-full">Gerar Texto</Button>
+
+            {textoFinal && (
+              <div className="mt-6">
+                <label className="text-sm font-medium">Texto Gerado</label>
+                <Textarea rows={10} value={textoFinal} readOnly />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+}
