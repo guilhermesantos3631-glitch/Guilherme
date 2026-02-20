@@ -1,2 +1,0 @@
-# Guilherme
-Refeições Engenharia Grupotelles
